@@ -9,12 +9,14 @@
       <v-row>
         <v-col xs="12" sm="8" offset-sm="2">
           <v-main>
+            <PersonalizeQuiz v-if="!formSubmitted" @submitForm="submitForm($event)" :url="url" />
             <QuestionBox
               :currQuestion="questions[index]"
               :next="next"
-              v-if="questions.length"
+              v-if="questions.length && formSubmitted"
               :increment="increment"
               :index="index"
+              :url="url"
             />
           </v-main>
         </v-col>
@@ -32,6 +34,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer.vue";
 import QuestionBox from "@/components/QuestionBox.vue";
+import PersonalizeQuiz from "@/components/PersonalizeQuiz.vue";
 
 export default {
   name: "App",
@@ -40,6 +43,7 @@ export default {
     Header,
     Footer,
     QuestionBox,
+    PersonalizeQuiz
   },
 
   data() {
@@ -48,6 +52,8 @@ export default {
       index: 0,
       numCorrect: 0,
       numTotal: 0,
+      formSubmitted: false,
+      url: "https://opentdb.com/api.php?amount="
     };
   },
   methods: {
@@ -60,20 +66,26 @@ export default {
       }
       this.numTotal++;
     },
-  },
-  async created() {
-    //When we use fetch we need to wait to atleast one promise(MDN DOcs)
-    // 1. First await to wait for the promise from fetch
-    const response = await fetch(
-      "https://opentdb.com/api.php?amount=10&type=multiple",
-      {
-        method: "get",
-      }
-    );
-    // 2. Second await to wait for the promise from fetch
-    let data = await response.json();
 
-    this.questions = data.results;
-  },
+    async submitForm(url) {
+      this.formSubmitted = !this.formSubmitted;
+      console.log(url);
+      let response = await fetch(url);
+      let data = await response.json();
+      // console.log(result);
+      this.questions = data.results;
+    }
+  }
+  // async mounted() {
+  //   //When we use fetch we need to wait to atleast one promise(MDN DOcs)
+  //   // 1. First await to wait for the promise from fetch
+  //   const response = await fetch(this.url, {
+  //     method: "get"
+  //   });
+  //   // 2. Second await to wait for the promise from fetch
+  //   let data = await response.json();
+
+  //   this.questions = data.results;
+  // }
 };
 </script>

@@ -25,12 +25,9 @@
         text
         @click="submitAnswer"
         :disabled="selectedIndex === null || isAnswered"
-        >Submit</v-btn
-      >
+      >Submit</v-btn>
 
-      <v-btn class="success" @click="next" :disabled="index > 8" text
-        >>Next></v-btn
-      >
+      <v-btn class="success" @click="next" :disabled="index > 8" text>>Next></v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -44,13 +41,14 @@ export default {
     next: Function,
     increment: Function,
     index: Number,
+    url: String
   },
   data() {
     return {
       selectedIndex: null,
       shuffledAnswers: [],
       correctIndex: null,
-      isAnswered: false,
+      isAnswered: false
     };
   },
   watch: {
@@ -61,8 +59,8 @@ export default {
         this.selectedIndex = null;
         this.shuffleAnswers();
         this.isAnswered = false;
-      },
-    },
+      }
+    }
   },
   methods: {
     selectedAnswer(index) {
@@ -79,7 +77,7 @@ export default {
     shuffleAnswers() {
       let answers = [
         ...this.currQuestion.incorrect_answers,
-        this.currQuestion.correct_answer,
+        this.currQuestion.correct_answer
       ];
       this.shuffledAnswers = _.shuffle(answers);
       this.correctIndex = this.shuffledAnswers.indexOf(
@@ -103,8 +101,8 @@ export default {
         answerClass = "error lighten-3";
       }
       return answerClass;
-    },
-  },
+    }
+  }
 };
 </script>
 
